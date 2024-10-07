@@ -127,6 +127,24 @@
   color:white;
   background-color: rgb(42, 40, 40) !important;
 
+}
 
+.filters-section{
+  display: flex;
+  flex-direction: row-reverse;
+  padding: auto;
+  margin-top: 0rem;
+  margin-bottom: 0rem;
+ 
+
+}
+
+.tag{
+  margin: auto 0.3rem auto 0.3rem;
+  font-size: 0.8rem;
+
+  color: black;
+  background: rgb(234, 235, 234) !important;
+  width: auto;
 
 }

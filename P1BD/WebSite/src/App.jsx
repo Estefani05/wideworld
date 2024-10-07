@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react'
-import { GETmodule ,GETSpesificmodule} from './Request';
+import { useEffect, useState } from 'react'
+import { GETmodule ,GETSpesificmodule,GETFilters} from './Request';
 import './App.css'
 import e from 'cors';
 
@@ -11,7 +11,53 @@ function App() {
   const [headers,setHeaders] = useState([])
   const [cardDataf,setCardDataf] = useState([])
   const [headersf,setHeadersf] = useState([])
+  const [formData, setFormData] = useState({
+    filterData: ''
+  });
+  const[filters,setFilters] = useState([''])
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = (e) => {
+     e.preventDefault();
+    
+    console.log('Form submitted: ', formData['filterData']);
+    let newFilters = filters;
+    newFilters.push(formData['filterData']);
+    console.log(newFilters);
+    setFilters(newFilters);
+  
+    GETFilters(`${module}_filtered`,filters,updateCardData)
+
+    setFormData({
+      filterData: ''
+    });
+
+
+
+
+
+  };
+
+  useEffect(()=>{
+    changeModule(module,null);
+    console.log(filters)
+    //setFilters([]);
+  },[]);
+
+/*
+  useEffect(()=>{
+    
+  },[filters]);
+
+
+*/
   function updateCardData(data){
     const Headers = Object.keys(data[0]);
     setHeaders(Headers);
@@ -40,7 +86,7 @@ function close(){
 
 }
  async function showDetailData(param,event){ 
-  //  console.log(event.target.textContent);
+    //console.log(event.target.textContent);
     const newParam = `${module}/${param}`;
     GETSpesificmodule(newParam,updateCardDataf)
   
@@ -54,7 +100,27 @@ function close(){
           <>
 
             <div className="card">
-                    <div className="card_title">table</div>    
+                    <div className="card_title">WideWorld Importers</div>    
+                    <div className = "filters-section">                    
+                    <form onSubmit={handleSubmit}>
+                          <label>
+                            Filter: 
+                            <input
+                              type="text"
+                              name="filterData"
+                              value={formData.filterData}
+                              onChange={handleChange}
+                            />
+                          </label>
+                          <button type="submit">Submit</button>
+                    </form>
+                    <button onClick = {()=>setFilters([''])}>clear</button>
+                    <ul className='filters-section'>
+                        {filters.map((name,index) =><li className="item tag" key= {index+900}>{name}</li>)}
+                    </ul>     
+
+
+                    </div>
                     <div className = "card_wrapper"> 
                       <div className= "menu_var">
                         {Modules.map((name,index) =><button onClick = {(event)=>{changeModule(name,event)} }key= {index}>{name}</button>)}
